@@ -27,6 +27,7 @@ import { colors, fonts, radius } from "./theme";
 import { svgs, SvgName } from "./svgs";
 import { avatarChoice, AvatarName, DEFAULT_AVATAR, onAvatarChange } from "./local";
 import { mirror, t } from "./i18n";
+import { useBottomInset } from "./insets";
 
 // ---------- layout ----------
 export const NAV_SPACE = 110; // room under the floating nav bar
@@ -46,6 +47,7 @@ export function Screen({
   style?: StyleProp<ViewStyle>;
 }) {
   const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const Scroller = Platform.OS === "web" ? ScrollView : KeyboardAwareScrollView;
   return (
     <Scroller
@@ -53,7 +55,7 @@ export function Screen({
       showsVerticalScrollIndicator={false}
       style={{ flex: 1, backgroundColor: colors.bg }}
       contentContainerStyle={[
-        { paddingTop: insets.top + 12, paddingHorizontal: 16, paddingBottom: (tabs ? NAV_SPACE : 32) + insets.bottom },
+        { paddingTop: insets.top + 12, paddingHorizontal: 16, paddingBottom: (tabs ? NAV_SPACE : 32) + bottom },
         s.page,
         style,
       ]}

@@ -157,7 +157,7 @@
   /* the app window that opens from the icon */
   .window { position: absolute; inset: 0; z-index: 10; background: var(--lilac); transform: scale(.12); opacity: 0; pointer-events: none; transition: transform .42s cubic-bezier(.2,.8,.2,1), opacity .25s ease; border-radius: 48px; overflow: hidden; }
   .window.open { transform: scale(1); opacity: 1; pointer-events: auto; border-radius: 0; }
-  .window iframe { position: absolute; top: 40px; left: 0; width: 100%; height: calc(100% - 40px - 26px); border: 0; background: var(--lilac); opacity: 0; transition: opacity .3s ease; }
+  .window iframe { position: absolute; top: 40px; left: 0; width: 100%; height: calc(100% - 40px); border: 0; background: var(--lilac); opacity: 0; transition: opacity .3s ease; }
   .window.ready iframe { opacity: 1; }
   .splash { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(180deg, #C5B8FE 6%, #E9E9FC 50%, #C5B8FE 95%); transition: opacity .3s ease; }
   .window.ready .splash { opacity: 0; pointer-events: none; }
@@ -365,7 +365,10 @@
     frame = document.createElement('iframe');
     frame.title = 'Rahati app';
     frame.allow = 'clipboard-write';
-    frame.src = appUrl;
+    // ?frame=1 tells the app it sits above this phone's home line (see mobile-app/src/insets.ts)
+    const src = new URL(appUrl);
+    src.searchParams.set('frame', '1');
+    frame.src = src.href;
     frame.addEventListener('load', () => setTimeout(() => win.classList.add('ready'), 200));
     win.appendChild(frame);
   }

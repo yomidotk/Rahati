@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeOutDown } from "react-native-reanimated";
 import { api, errorText } from "../../src/api";
@@ -12,6 +11,7 @@ import { Button, Card, ErrorText, Loading, Screen, Tag } from "../../src/ui";
 import { readMinutes } from "../../src/Library";
 import { colors, fonts, topicLabel } from "../../src/theme";
 import { mirror, t } from "../../src/i18n";
+import { useBottomInset } from "../../src/insets";
 
 /** Splits the card text into paragraphs; a short line with no end punctuation is a heading. */
 function blocks(body: string) {
@@ -26,7 +26,7 @@ export default function CardDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const cid = Number(id);
   const router = useRouter();
-  const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const q = useLoad(() => api.card(cid), [cid]);
   const [read, setRead] = useState(false);
   const [inTodos, setInTodos] = useState(false);
@@ -129,7 +129,7 @@ export default function CardDetail() {
         <View style={{ height: 90 }} />
       </Screen>
 
-      <View style={[s.barWrap, { paddingBottom: Math.max(insets.bottom, 12) }]} pointerEvents="box-none">
+      <View style={s.barWrap} pointerEvents="box-none">
         {failed ? (
           <Animated.View entering={FadeInDown.duration(220)} exiting={FadeOutDown.duration(180)} style={s.errorBanner}>
             <Text style={s.errorText}>{failed}</Text>
@@ -142,7 +142,7 @@ export default function CardDetail() {
             </Pressable>
           </Animated.View>
         ) : null}
-        <View style={s.bar}>
+        <View style={[s.bar, { paddingBottom: Math.max(bottom, 12) }]}>
           <Button
             title={read ? t("✓ Read") : t("Mark as read")}
             kind="outline"

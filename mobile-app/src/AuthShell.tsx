@@ -10,10 +10,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { Icon } from "./ui";
 import { colors, fonts } from "./theme";
 import { mirror, t } from "./i18n";
+import { useBottomInset } from "./insets";
 
 export function AuthShell({ title, subtitle, children, footer }: { title: string; subtitle: string; children: React.ReactNode; footer?: React.ReactNode }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const Scroller = Platform.OS === "web" ? ScrollView : KeyboardAwareScrollView;
   return (
     <LinearGradient colors={["#C5B8FE", "#E9E9FC", "#D9D0FF"]} locations={[0, 0.55, 1]} style={{ flex: 1 }}>
@@ -21,7 +23,7 @@ export function AuthShell({ title, subtitle, children, footer }: { title: string
         bottomOffset={24}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1, paddingTop: insets.top + 8, paddingBottom: insets.bottom + 24, paddingHorizontal: 24 }}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: insets.top + 8, paddingBottom: bottom + 24, paddingHorizontal: 24 }}
       >
         <View style={s.column}>
           <Pressable

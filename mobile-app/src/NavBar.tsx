@@ -4,12 +4,12 @@
 // move and morph. Animations run on the UI thread (Reanimated).
 import { useEffect, useState } from "react";
 import { Keyboard, Pressable, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 import type { BottomTabBarProps } from "expo-router/tabs";
 import { ChartNoAxesColumn, CircleUser, HeartHandshake, House, NotebookPen, type LucideIcon } from "lucide-react-native";
 import { colors, fonts } from "./theme";
 import { t } from "./i18n";
+import { useBottomInset } from "./insets";
 
 // One icon set (Lucide) so every tab has the same grid, size and line weight.
 type TabDef = { label: string; Icon: LucideIcon; color: string };
@@ -78,7 +78,7 @@ function Tab({ tab, on, labelW, padX, onLabel, onPress }: { tab: TabDef; on: boo
 }
 
 export function NavBar({ state, navigateToTab }: BottomTabBarProps) {
-  const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const routes = state.routes.filter((r) => TABS[r.name]);
   const active = Math.max(0, routes.findIndex((r) => r.key === state.routes[state.index]?.key));
   const [width, setWidth] = useState(0);
@@ -99,7 +99,7 @@ export function NavBar({ state, navigateToTab }: BottomTabBarProps) {
   const wrap = useAnimatedStyle(() => ({ opacity: 1 - hide.value, transform: [{ translateY: hide.value * 110 }] }));
 
   return (
-    <Animated.View pointerEvents="box-none" style={[s.wrap, { bottom: Math.max(insets.bottom, 12) }, wrap]}>
+    <Animated.View pointerEvents="box-none" style={[s.wrap, { bottom: Math.max(bottom, 12) }, wrap]}>
       <View style={s.bar} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
         {routes.map((r, i) => (
           <Tab

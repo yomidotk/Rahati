@@ -1,22 +1,22 @@
 // Landing page from Figma (gradient + logo), with the two ways in at the bottom.
 import { StyleSheet, Text, View } from "react-native";
 import { Redirect, useRouter } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Splash } from "../src/Splash";
 import { Button } from "../src/ui";
 import { AuthButton } from "../src/AuthShell";
 import { useAuth } from "../src/auth";
 import { colors, fonts } from "../src/theme";
 import { t } from "../src/i18n";
+import { useBottomInset } from "../src/insets";
 
 export default function Welcome() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const { me } = useAuth();
   if (me) return <Redirect href="/home" />;
   return (
     <Splash>
-      <View style={[s.bottom, { paddingBottom: insets.bottom + 28 }]}>
+      <View style={[s.bottom, { paddingBottom: bottom + 28 }]}>
         <View style={s.inner}>
         <Text style={s.tagline}>{t("Your peace, at your pace.")}</Text>
         <AuthButton title={t("Create my space")} onPress={() => router.push("/register")} />

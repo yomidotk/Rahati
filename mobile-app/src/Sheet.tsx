@@ -10,6 +10,7 @@ import { GestureDetector, GestureHandlerRootView, usePanGesture } from "react-na
 import { scheduleOnRN } from "react-native-worklets";
 import { colors, fonts } from "./theme";
 import { t } from "./i18n";
+import { useBottomInset } from "./insets";
 
 const IN = { duration: 300, easing: Easing.bezier(0.2, 0, 0, 1) };
 const OUT = { duration: 220, easing: Easing.bezier(0.3, 0, 1, 1) };
@@ -18,6 +19,7 @@ const FLICK = 900; // points per second
 
 export function Sheet({ visible, title, onClose, children }: { visible: boolean; title: string; onClose: () => void; children: React.ReactNode }) {
   const insets = useSafeAreaInsets();
+  const bottom = useBottomInset();
   const [mounted, setMounted] = useState(visible);
   const p = useSharedValue(0); // 0 = hidden, 1 = shown
   const h = useSharedValue(600); // card height, measured once laid out
@@ -60,7 +62,7 @@ export function Sheet({ visible, title, onClose, children }: { visible: boolean;
         </Animated.View>
         <View style={s.bottom} pointerEvents="box-none">
           <GestureDetector gesture={pan}>
-            <Animated.View style={[s.sheet, { paddingBottom: insets.bottom + 20 }, card]} onLayout={(e) => (h.value = e.nativeEvent.layout.height)}>
+            <Animated.View style={[s.sheet, { paddingBottom: bottom + 20 }, card]} onLayout={(e) => (h.value = e.nativeEvent.layout.height)}>
               <View style={s.grabber} />
               <View style={s.head}>
                 <Text style={s.title}>{title}</Text>
