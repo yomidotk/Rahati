@@ -69,6 +69,12 @@
   .codes small { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; padding: 0 26px; border-radius: 27px; font-weight: 600; font-size: 15px; text-decoration: none; border: 0; cursor: pointer; font-family: inherit; }
   .btn.primary { background: linear-gradient(135deg, var(--purple), var(--deep)); color: var(--white); box-shadow: 0 14px 30px -10px rgba(78,75,224,.65); }
+  .btn.glass { align-self: flex-start; min-height: 50px; padding: 0 10px 0 22px; gap: 12px; color: var(--deep); background: rgba(255,255,255,.72); backdrop-filter: blur(14px);
+    box-shadow: 0 14px 30px -18px rgba(40,20,120,.45), inset 0 0 0 1px rgba(255,255,255,.95); transition: transform .2s ease, box-shadow .2s ease; }
+  .btn.glass .go { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--purple), var(--deep)); }
+  .btn.glass .go svg { width: 14px; height: 14px; }
+  .btn.glass:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -16px rgba(78,75,224,.55), inset 0 0 0 1px rgba(255,255,255,.95); }
+  .btn.glass:focus-visible { outline: 3px solid var(--lavender); outline-offset: 3px; }
   .note { font-size: 12px; color: var(--muted); line-height: 1.6; margin: 0; }
   .note b { font-weight: 600; color: var(--ink); }
 
@@ -208,6 +214,11 @@
         <small>Scan to try Rahati in your phone’s browser. No install needed.</small>
       </div>
     </div>
+
+    <a class="btn glass desktop-only" href="https://rahati-frontend.vercel.app/" target="_blank" rel="noopener">
+      See the psychologist’s dashboard
+      <span class="go" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M4 10L10 4M5 4h5v5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
 
     <p class="note desktop-only">Tap the <b>Rahati</b> icon, or the notification, to start. This is a demo: make a test account and don’t enter real personal information.</p>
     <p class="note">The demo server sleeps when nobody uses it, so the first load can take up to a minute.</p>
