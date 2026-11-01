@@ -180,10 +180,16 @@
   @media (max-height: 760px) and (min-width: 761px) { .lead { display: none; } }
   @media (max-height: 620px) and (min-width: 761px) { .steps, .note.desktop-only { display: none; } }
 
-  /* small screens: only the phone, filling the screen, nothing around it */
+  /* the dashboard link under the phone: small screens only (laptops get the button in the panel) */
+  .dash-link { display: none; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--deep); text-decoration: none;
+    padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.6); box-shadow: inset 0 0 0 1px rgba(255,255,255,.9); }
+  .dash-link:focus-visible { outline: 3px solid var(--lavender); outline-offset: 2px; }
+
+  /* small screens: the phone filling the screen, and only the dashboard link under it */
   @media (max-width: 760px) {
-    main { padding: 12px; gap: 0; }
+    main { padding: 12px; gap: 12px; flex-direction: column; }
     .panel { display: none; }
+    .dash-link { display: inline-flex; }
     .stage::after { bottom: -14px; }
   }
 
@@ -264,6 +270,7 @@
       </div></div>
     </div>
   </div>
+  <a class="dash-link" href="https://rahati-frontend.vercel.app/" target="_blank" rel="noopener">See the psychologist’s dashboard ↗</a>
 </main>
 
 <script>
@@ -323,7 +330,7 @@
   const fit = () => {
     // On a phone the mockup alone fills the screen; on a computer it fits beside the text.
     const s = innerWidth <= 760
-      ? Math.min(1, (innerWidth - 24) / PHONE_W, (innerHeight - 40) / PHONE_H)
+      ? Math.min(1, (innerWidth - 24) / PHONE_W, (innerHeight - 76) / PHONE_H)
       : Math.min(1, (innerHeight - 64) / PHONE_H, (innerWidth * 0.48) / PHONE_W);
     document.documentElement.style.setProperty('--scale', Math.max(0.3, s).toFixed(3));
   };
