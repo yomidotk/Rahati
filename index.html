@@ -180,16 +180,18 @@
   @media (max-height: 760px) and (min-width: 761px) { .lead { display: none; } }
   @media (max-height: 620px) and (min-width: 761px) { .steps, .note.desktop-only { display: none; } }
 
-  /* the dashboard link under the phone: small screens only (laptops get the button in the panel) */
-  .dash-link { display: none; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--deep); text-decoration: none;
+  /* the links under the phone: small screens only (laptops get the panel); the APK one on Android only */
+  .under { display: none; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .dash-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 600; color: var(--deep); text-decoration: none;
     padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.6); box-shadow: inset 0 0 0 1px rgba(255,255,255,.9); }
   .dash-link:focus-visible { outline: 3px solid var(--lavender); outline-offset: 2px; }
+  .dash-link[hidden] { display: none; }
 
-  /* small screens: the phone filling the screen, and only the dashboard link under it */
+  /* small screens: the phone filling the screen, and only the links under it */
   @media (max-width: 760px) {
     main { padding: 12px; gap: 12px; flex-direction: column; }
     .panel { display: none; }
-    .dash-link { display: inline-flex; }
+    .under { display: flex; }
     .stage::after { bottom: -14px; }
   }
 
@@ -214,10 +216,10 @@
     </ul>
 
     <div class="codes desktop-only">
-      <div class="qr" id="qrWeb"></div>
+      <div class="qr" id="qrApk"></div>
       <div>
-        <strong>On your phone?</strong>
-        <small>Scan to try Rahati in your phone’s browser. No install needed.</small>
+        <strong>Get the Android app</strong>
+        <small>Scan to install the real app on your Android phone (APK).</small>
       </div>
     </div>
 
@@ -270,7 +272,10 @@
       </div></div>
     </div>
   </div>
-  <a class="dash-link" href="https://rahati-frontend.vercel.app/" target="_blank" rel="noopener">See the psychologist’s dashboard ↗</a>
+  <div class="under" id="under">
+    <a class="dash-link" href="https://rahati-frontend.vercel.app/" target="_blank" rel="noopener">See the psychologist’s dashboard ↗</a>
+    <a class="dash-link" id="apkLink" hidden download>Get the Android app ↓</a>
+  </div>
 </main>
 
 <script>
@@ -325,12 +330,18 @@
   tick();
   setInterval(tick, 15000);
 
+  // ---- the real Android build (Expo/EAS). Expo keeps build files ~30 days: rebuild and replace after that ----
+  const APK_URL = 'https://expo.dev/artifacts/eas/qxeVpHD8qyYABeiOxdkxqXgFGMKFPfmEq5FfHa58xCs';
+  const apkLink = document.getElementById('apkLink');
+  apkLink.href = APK_URL;
+  apkLink.hidden = !/Android/i.test(navigator.userAgent);
+
   // ---- fit the phone to the window (the app inside always sees a 390×844 screen) ----
   const PHONE_W = 418, PHONE_H = 872;
   const fit = () => {
-    // On a phone the mockup alone fills the screen; on a computer it fits beside the text.
+    // On a phone the mockup fills the screen above its links; on a computer it fits beside the text.
     const s = innerWidth <= 760
-      ? Math.min(1, (innerWidth - 24) / PHONE_W, (innerHeight - 76) / PHONE_H)
+      ? Math.min(1, (innerWidth - 24) / PHONE_W, (innerHeight - 40 - document.getElementById('under').offsetHeight) / PHONE_H)
       : Math.min(1, (innerHeight - 64) / PHONE_H, (innerWidth * 0.48) / PHONE_W);
     document.documentElement.style.setProperty('--scale', Math.max(0.3, s).toFixed(3));
   };
@@ -408,11 +419,11 @@
   setTimeout(() => notif.classList.remove('show'), 11000);
 
   // ---- phone link and QR code ----
-  // The QR opens this same page (phones get the mockup too); "Open full screen" is the bare app.
+  // The QR downloads the Android app; anyone already here can try the web version right on this page.
   const q = qrcode(0, 'M');
-  q.addData(location.origin + location.pathname);
+  q.addData(APK_URL);
   q.make();
-  document.getElementById('qrWeb').innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+  document.getElementById('qrApk').innerHTML = q.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
 </script>
 </body>
 </html>
